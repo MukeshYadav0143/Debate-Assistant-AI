@@ -19,7 +19,7 @@ function App() {
 
   // Load debate history
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/debates")
+    fetch("https://debate-assistant-ai-backend.onrender.com/debates")
       .then((response) => response.json())
       .then((data) => {
         setHistory(data.debates)
@@ -42,7 +42,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/debate-opponent",
+        "https://debate-assistant-ai-backend.onrender.com/debate-opponent",
         {
           method: "POST",
           headers: {
@@ -75,7 +75,7 @@ function App() {
   setTopicLoading(true)
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/generate-topic", {
+    const response = await fetch("https://debate-assistant-ai-backend.onrender.com/generate-topic", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -107,7 +107,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/analyze-debate",
+        "https://debate-assistant-ai-backend.onrender.com/analyze-debate",
         {
           method: "POST",
           headers: {
@@ -139,7 +139,7 @@ function App() {
 
       // Save debate to MongoDB
       const saveResponse = await fetch(
-        "http://127.0.0.1:8000/save-debate",
+        "https://debate-assistant-ai-backend.onrender.com/save-debate",
         {
           method: "POST",
           headers: {
@@ -158,7 +158,7 @@ function App() {
 
       // Refresh history
       const historyResponse = await fetch(
-        "http://127.0.0.1:8000/debates"
+        "https://debate-assistant-ai-backend.onrender.com/debates"
       )
 
       const historyData = await historyResponse.json()
