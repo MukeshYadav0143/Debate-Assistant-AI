@@ -5,6 +5,8 @@ import requests
 from pymongo import MongoClient
 
 import os
+from openai import OpenAI
+openai_client = OpenAI()
 client = MongoClient(os.getenv("MONGO_URI", "mongodb://localhost:27017/"))
 db = client["debate_assistant"]
 debates_collection = db["debates"]
