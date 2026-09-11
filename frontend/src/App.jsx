@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import confetti from "canvas-confetti"
+import developerPhoto from "./assets/developer.jpg"
 import {
   Sparkles,
   Swords,
@@ -19,8 +20,13 @@ import {
   Copy,
   Check,
   Scale,
-  ThumbsUp,
-  ThumbsDown
+  X,
+  Code2,
+  Cpu,
+  Database,
+  MapPin,
+  Layers,
+  Terminal
 } from "lucide-react"
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"
@@ -49,6 +55,7 @@ function App() {
   const [generatedTopics, setGeneratedTopics] = useState(null)
   const [topicLoading, setTopicLoading] = useState(false)
   const [copiedKey, setCopiedKey] = useState(null)
+  const [showDevModal, setShowDevModal] = useState(false)
 
   const totalDebates = history.length
 
@@ -80,7 +87,7 @@ function App() {
         origin: { y: 0.6 },
         colors: ["#a855f7", "#3b82f6", "#10b981", "#f59e0b"]
       })
-    } catch (e) {
+    } catch {
       // ignore if canvas not supported
     }
   }
@@ -301,46 +308,88 @@ function App() {
         </header>
 
         {/* Developer Profile Section Card */}
-        <section className="group relative bg-gradient-to-r from-slate-900 via-purple-950/30 to-slate-900 border border-purple-800/40 hover:border-purple-500/60 rounded-2xl p-5 mb-8 transition-all duration-300 shadow-lg shadow-purple-950/20 hover:shadow-purple-900/30 animate-glow-border">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-2xl shadow-md group-hover:scale-105 transition-transform duration-300">
-                  👨‍💻
+        <section className="group relative bg-gradient-to-r from-slate-900/95 via-purple-950/40 to-slate-900/95 border border-purple-800/40 hover:border-purple-500/60 rounded-3xl p-5 sm:p-6 mb-8 transition-all duration-300 shadow-xl shadow-purple-950/25 hover:shadow-purple-900/40 animate-glow-border">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-5">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 text-center sm:text-left">
+              {/* Avatar with Glow and Status */}
+              <div
+                onClick={() => setShowDevModal(true)}
+                className="relative cursor-pointer group/avatar shrink-0"
+                title="Click to view full developer profile"
+              >
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl p-0.5 bg-gradient-to-tr from-purple-500 via-pink-500 to-indigo-500 shadow-lg shadow-purple-500/30 group-hover/avatar:scale-105 group-hover/avatar:shadow-purple-500/50 transition-all duration-300">
+                  <img
+                    src={developerPhoto}
+                    alt="Mukesh Yadav"
+                    className="w-full h-full object-cover object-top rounded-[14px]"
+                  />
                 </div>
-                <span className="absolute -bottom-1 -right-1 flex h-3.5 w-3.5">
+                <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-slate-900"></span>
+                  <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-slate-900"></span>
                 </span>
               </div>
+
+              {/* Info */}
               <div>
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  <h2 className="font-bold text-white text-lg tracking-wide">Mukesh Yadav</h2>
+                <div className="flex items-center justify-center sm:justify-start gap-2.5 flex-wrap">
+                  <h2 
+                    onClick={() => setShowDevModal(true)}
+                    className="font-extrabold text-white text-xl tracking-wide cursor-pointer hover:text-purple-300 transition-colors"
+                  >
+                    Mukesh Yadav
+                  </h2>
                   <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 inline-flex items-center gap-1">
-                    <Award className="w-3 h-3" /> Lead Developer
+                    <Award className="w-3 h-3 text-purple-400" /> Lead AI Developer
+                  </span>
+                  <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/30">
+                    Architect
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-300 mt-1 flex items-center gap-1.5 flex-wrap">
-                  <GraduationCap className="w-4 h-4 text-purple-400" />
+
+                <p className="text-xs sm:text-sm text-slate-300 mt-1.5 flex items-center justify-center sm:justify-start gap-1.5 flex-wrap">
+                  <GraduationCap className="w-4 h-4 text-purple-400 shrink-0" />
                   <strong className="text-purple-300">BBD University</strong>
                   <span className="text-slate-600">•</span>
-                  <span>BCA (Data Science & AI), 2nd Year</span>
+                  <span>BCA (Data Science & AI)</span>
+                  <span className="text-slate-600">•</span>
+                  <span className="text-emerald-400 font-medium">2nd Year</span>
                 </p>
+
+                {/* Tech Chips */}
+                <div className="flex items-center justify-center sm:justify-start gap-1.5 mt-2.5 flex-wrap">
+                  <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-800/90 text-slate-300 border border-slate-700/80">Python</span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-800/90 text-slate-300 border border-slate-700/80">FastAPI</span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-800/90 text-slate-300 border border-slate-700/80">React 19</span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-800/90 text-slate-300 border border-slate-700/80">Ollama (Llama 3.2)</span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-800/90 text-slate-300 border border-slate-700/80">MongoDB</span>
+                </div>
               </div>
             </div>
 
-            <a
-              href="https://github.com/MukeshYadav0143"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/90 hover:bg-purple-600 text-slate-200 hover:text-white border border-slate-700/80 hover:border-purple-500 text-xs font-semibold transition-all duration-300 group-hover:shadow-lg shrink-0"
-            >
-              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-              </svg>
-              <span>GitHub Profile</span>
-              <ExternalLink className="w-3.5 h-3.5 opacity-70" />
-            </a>
+            {/* Action Buttons */}
+            <div className="flex sm:flex-col items-center gap-2.5 w-full sm:w-auto shrink-0">
+              <button
+                onClick={() => setShowDevModal(true)}
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-md shadow-purple-600/25 transition-all duration-200 hover:scale-102 active:scale-98 cursor-pointer w-full"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+                <span>View Full Profile</span>
+              </button>
+
+              <a
+                href="https://github.com/MukeshYadav0143"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700/80 hover:border-purple-500/60 text-xs font-semibold transition-all duration-200 shrink-0 w-full"
+              >
+                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+                <span>GitHub</span>
+                <ExternalLink className="w-3 h-3 opacity-70" />
+              </a>
+            </div>
           </div>
         </section>
 
@@ -863,14 +912,219 @@ function App() {
           <p className="text-slate-400 text-sm font-medium">
             Debate Assistant AI • Empowering Next-Gen Debaters with Local AI
           </p>
-          <div className="mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-slate-900/90 border border-slate-800 text-xs text-slate-400 hover:border-purple-500/40 transition-colors">
-            <span>Built with ❤️ by <strong className="text-slate-200">Mukesh Yadav</strong></span>
+          <button
+            onClick={() => setShowDevModal(true)}
+            className="mt-4 inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-slate-900/90 border border-slate-800 hover:border-purple-500/60 text-xs text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm hover:shadow-purple-900/30"
+          >
+            <img
+              src={developerPhoto}
+              alt="Mukesh Yadav"
+              className="w-5 h-5 rounded-full object-cover object-top border border-purple-400/50"
+            />
+            <span>Built with ❤️ by <strong className="text-white">Mukesh Yadav</strong></span>
             <span>•</span>
-            <span className="text-purple-400 font-medium">BBD University (BCA DS-AI, 2nd Year)</span>
-          </div>
+            <span className="text-purple-400 font-medium">BBD University (BCA DS-AI)</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-semibold">Profile</span>
+          </button>
         </footer>
 
       </div>
+
+      {/* Developer Profile Modal */}
+      {showDevModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in"
+          onClick={() => setShowDevModal(false)}
+        >
+          <div
+            className="bg-slate-900 border border-purple-700/50 rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-2xl shadow-purple-950/60 relative animate-fade-in text-left"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header Banner */}
+            <div className="relative h-32 sm:h-40 bg-gradient-to-r from-purple-700 via-indigo-700 to-blue-600 rounded-t-3xl overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.25),transparent_70%)]" />
+              <button
+                onClick={() => setShowDevModal(false)}
+                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-sm transition-all cursor-pointer z-10"
+                title="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Profile Avatar & Primary Info */}
+            <div className="px-6 sm:px-8 pb-8 pt-0 relative">
+              <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 -mt-16 sm:-mt-20 mb-6 text-center sm:text-left">
+                <div className="relative">
+                  <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl p-1 bg-gradient-to-tr from-purple-500 via-pink-500 to-indigo-500 shadow-2xl shadow-purple-600/40">
+                    <img
+                      src={developerPhoto}
+                      alt="Mukesh Yadav"
+                      className="w-full h-full object-cover object-top rounded-[20px]"
+                    />
+                  </div>
+                  <span className="absolute bottom-1 right-1 flex h-4 w-4">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-slate-900"></span>
+                  </span>
+                </div>
+
+                <div className="flex-1">
+                  <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
+                    <h2 className="text-2xl sm:text-3xl font-black text-white">Mukesh Yadav</h2>
+                    <span className="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-xs font-semibold border border-purple-500/30 flex items-center gap-1">
+                      <Award className="w-3.5 h-3.5 text-purple-400" />
+                      Lead AI Developer
+                    </span>
+                  </div>
+                  <p className="text-purple-300 font-medium text-sm mt-1">
+                    AI Systems Architect & Full-Stack Engineer
+                  </p>
+                  <p className="text-slate-400 text-xs mt-1 flex items-center justify-center sm:justify-start gap-2">
+                    <MapPin className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Lucknow, Uttar Pradesh, India</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Bio */}
+              <div className="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-4 sm:p-5 mb-5">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-purple-400 mb-2 flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5" />
+                  <span>About Developer</span>
+                </h3>
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  Passionate Data Science and Artificial Intelligence student dedicated to engineering intelligent, high-performance applications. Specializes in local LLM orchestration, agentic AI pipelines, and interactive full-stack web platforms with privacy-by-design principles.
+                </p>
+              </div>
+
+              {/* Academic Background */}
+              <div className="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-4 sm:p-5 mb-5">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-purple-400 mb-3 flex items-center gap-1.5">
+                  <GraduationCap className="w-4 h-4 text-purple-400" />
+                  <span>Education & Credentials</span>
+                </h3>
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-300 shrink-0 mt-0.5">
+                    🎓
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-base">Babu Banarasi Das University (BBDU)</h4>
+                    <p className="text-purple-300 text-sm font-medium">
+                      Bachelor of Computer Applications (BCA)
+                    </p>
+                    <p className="text-slate-400 text-xs mt-0.5">
+                      Specialization in <span className="text-slate-200 font-semibold">Data Science & Artificial Intelligence</span> • 2nd Year (Batch 2024–2027)
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Technical Arsenal */}
+              <div className="mb-5">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-purple-400 mb-3 flex items-center gap-1.5">
+                  <Code2 className="w-3.5 h-3.5" />
+                  <span>Technical Arsenal</span>
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-3.5">
+                    <div className="flex items-center gap-2 text-white font-semibold text-xs mb-1.5">
+                      <Cpu className="w-4 h-4 text-purple-400" />
+                      <span>AI & LLM Inference</span>
+                    </div>
+                    <p className="text-slate-400 text-xs leading-relaxed">
+                      Ollama, Llama 3.2 (3B), Prompt Engineering, Local Inference Pipelines, OpenAI APIs
+                    </p>
+                  </div>
+
+                  <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-3.5">
+                    <div className="flex items-center gap-2 text-white font-semibold text-xs mb-1.5">
+                      <Terminal className="w-4 h-4 text-emerald-400" />
+                      <span>Backend Architecture</span>
+                    </div>
+                    <p className="text-slate-400 text-xs leading-relaxed">
+                      Python 3.13+, FastAPI, Uvicorn, RESTful APIs, Pydantic, JSON Sanitization
+                    </p>
+                  </div>
+
+                  <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-3.5">
+                    <div className="flex items-center gap-2 text-white font-semibold text-xs mb-1.5">
+                      <Layers className="w-4 h-4 text-blue-400" />
+                      <span>Frontend Engineering</span>
+                    </div>
+                    <p className="text-slate-400 text-xs leading-relaxed">
+                      React 19, Vite, Tailwind CSS v4, Lucide Icons, Canvas Confetti, Responsive UX
+                    </p>
+                  </div>
+
+                  <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-3.5">
+                    <div className="flex items-center gap-2 text-white font-semibold text-xs mb-1.5">
+                      <Database className="w-4 h-4 text-amber-400" />
+                      <span>Data & Version Control</span>
+                    </div>
+                    <p className="text-slate-400 text-xs leading-relaxed">
+                      MongoDB, PyMongo, Git, GitHub, Decoupled Architecture
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Debate Assistant AI Contributions */}
+              <div className="bg-gradient-to-br from-purple-950/40 via-slate-800/60 to-slate-900 border border-purple-800/40 rounded-2xl p-4 sm:p-5 mb-6">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-purple-300 mb-2.5 flex items-center gap-1.5">
+                  <Brain className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Key Project Highlights (Debate Assistant AI)</span>
+                </h3>
+                <ul className="space-y-2 text-xs text-slate-300">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-purple-400 shrink-0 mt-0.5" />
+                    <span>Engineered zero-cost, private offline AI debate reasoning via Ollama & Llama 3.2.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-purple-400 shrink-0 mt-0.5" />
+                    <span>Created 3-dimensional debate skill assessment (Strength, Clarity, Reasoning).</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-purple-400 shrink-0 mt-0.5" />
+                    <span>Implemented the interactive AI Debate Opponent with adaptive counterarguments.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-purple-400 shrink-0 mt-0.5" />
+                    <span>Integrated MongoDB persistence for debate history and skill analytics.</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Social / Action Links */}
+              <div className="flex flex-col sm:flex-row items-center gap-3 pt-1">
+                <a
+                  href="https://github.com/MukeshYadav0143"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 hover:border-purple-500 text-sm font-semibold transition-all duration-200 shadow-lg"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                  </svg>
+                  <span>GitHub Profile</span>
+                  <ExternalLink className="w-4 h-4 opacity-70" />
+                </a>
+
+                <a
+                  href="https://github.com/MukeshYadav0143/Debate-Assistant-AI"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-sm font-semibold transition-all duration-200 shadow-lg shadow-purple-600/30"
+                >
+                  <span>Project Repository</span>
+                  <ExternalLink className="w-4 h-4 opacity-70" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }

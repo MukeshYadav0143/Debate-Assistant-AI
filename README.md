@@ -6,11 +6,23 @@ An intelligent, AI-powered debate platform designed to help users sharpen critic
 
 ## 👨‍💻 Developer Profile
 
-- **Developer**: **Mukesh Yadav**
-- **Institution**: **BBD University** (Babu Banarasi Das University)
-- **Program**: **BCA (Data Science & Artificial Intelligence)** — *2nd Year*
-- **GitHub**: [@MukeshYadav0143](https://github.com/MukeshYadav0143)
-- **Project Repository**: [Debate-Assistant-AI](https://github.com/MukeshYadav0143/Debate-Assistant-AI)
+<p align="center">
+  <img src="screenshots/developer.jpg" width="160" style="border-radius: 20px; box-shadow: 0 8px 24px rgba(168, 85, 247, 0.35);" alt="Mukesh Yadav - Developer" />
+</p>
+
+<p align="center">
+  <strong>Mukesh Yadav</strong><br />
+  <em>Lead AI Developer & Full-Stack Architect</em>
+</p>
+
+| Field | Information |
+| :--- | :--- |
+| **Developer** | **Mukesh Yadav** |
+| **Institution** | **BBD University** (Babu Banarasi Das University, Lucknow) |
+| **Program** | **BCA (Data Science & Artificial Intelligence)** — *2nd Year (2024–2027)* |
+| **Technical Stack** | Python, FastAPI, React 19, Tailwind CSS v4, Ollama (Llama 3.2), MongoDB, Prompt Engineering |
+| **GitHub** | [@MukeshYadav0143](https://github.com/MukeshYadav0143) |
+| **Project Repository** | [Debate-Assistant-AI](https://github.com/MukeshYadav0143/Debate-Assistant-AI) |
 
 ---
 
