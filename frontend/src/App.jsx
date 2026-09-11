@@ -481,9 +481,16 @@ function App() {
         </div>
 
         {/* Footer */}
-        <div className="text-center text-slate-500 text-sm mt-10">
-          Debate Assistant AI • Skill Analysis
-        </div>
+        <footer className="text-center mt-12 pt-6 border-t border-slate-800/80">
+          <p className="text-slate-400 text-sm font-medium">
+            Debate Assistant AI • Empowering Critical Thinkers
+          </p>
+          <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs text-slate-400">
+            <span>Developed with ❤️ by <strong className="text-slate-200">Mukesh Yadav</strong></span>
+            <span>•</span>
+            <span className="text-purple-400">BBD University (BCA DS-AI, 2nd Year)</span>
+          </div>
+        </footer>
       </div>
     </div>
   )
