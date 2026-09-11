@@ -7,6 +7,12 @@ from pymongo import MongoClient
 import os
 from openai import OpenAI
 openai_client = OpenAI()
+def ask_ai(prompt: str) -> str:
+    response = openai_client.responses.create(
+        model="gpt-4o-mini",
+        input=prompt
+    )
+    return response.output_text
 client = MongoClient(os.getenv("MONGO_URI", "mongodb://localhost:27017/"))
 db = client["debate_assistant"]
 debates_collection = db["debates"]
@@ -66,18 +72,9 @@ Format:
 }}
 """
 
-    response = requests.post(
-        "http://localhost:11434/api/generate",
-        json={
-            "model": "llama3.2:3b",
-            "prompt": prompt,
-            "stream": False
-        }
-    )
+    ai_text = ask_ai(prompt)
 
-    response.raise_for_status()
-
-    ai_text = response.json()["response"]
+    
 
     return {
         "topic": request.topic,
@@ -110,19 +107,7 @@ Give:
 
 Keep the response clear and concise.
 """
-
-    response = requests.post(
-        "http://localhost:11434/api/generate",
-        json={
-            "model": "llama3.2:3b",
-            "prompt": prompt,
-            "stream": False
-        }
-    )
-
-    response.raise_for_status()
-
-    ai_text = response.json()["response"]
+    ai_text = ask_ai(prompt)
 
     return {
         "topic": request.topic,
@@ -161,18 +146,9 @@ At the end, calculate the overall score out of 10.
 Keep the feedback constructive and easy to understand.
 """
 
-    response = requests.post(
-        "http://localhost:11434/api/generate",
-        json={
-            "model": "llama3.2:3b",
-            "prompt": prompt,
-            "stream": False
-        }
-    )
+    ai_text = ask_ai(prompt)
 
-    response.raise_for_status()
-
-    ai_text = response.json()["response"]
+    
 
     return {
         "topic": request.topic,
@@ -232,18 +208,7 @@ Format:
 }}
 """
 
-    response = requests.post(
-        "http://localhost:11434/api/generate",
-        json={
-            "model": "llama3.2:3b",
-            "prompt": prompt,
-            "stream": False
-        }
-    )
-
-    response.raise_for_status()
-
-    ai_text = response.json()["response"]
+    ai_text = ask_ai(prompt)
 
     import json
     ai_data = json.loads(ai_text)
