@@ -15,10 +15,22 @@ import {
   Flame,
   ArrowRight,
   ExternalLink,
-  GraduationCap
+  GraduationCap,
+  Copy,
+  Check,
+  Scale,
+  ThumbsUp,
+  ThumbsDown
 } from "lucide-react"
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"
+
+const QUICK_TOPICS = [
+  "Should AI replace teachers in classrooms?",
+  "Should governments mandate 100% renewable energy by 2035?",
+  "Should social media platforms enforce strict age limits?",
+  "Are autonomous vehicles safer than human drivers?"
+]
 
 function App() {
   const [history, setHistory] = useState([])
@@ -30,9 +42,13 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [opponentResult, setOpponentResult] = useState(null)
   const [opponentLoading, setOpponentLoading] = useState(false)
+  const [argsResult, setArgsResult] = useState(null)
+  const [argsLoading, setArgsLoading] = useState(false)
+
   const [topicCategory, setTopicCategory] = useState("General")
   const [generatedTopics, setGeneratedTopics] = useState(null)
   const [topicLoading, setTopicLoading] = useState(false)
+  const [copiedKey, setCopiedKey] = useState(null)
 
   const totalDebates = history.length
 
@@ -59,14 +75,21 @@ function App() {
   const triggerConfetti = () => {
     try {
       confetti({
-        particleCount: 80,
-        spread: 70,
+        particleCount: 90,
+        spread: 75,
         origin: { y: 0.6 },
         colors: ["#a855f7", "#3b82f6", "#10b981", "#f59e0b"]
       })
     } catch (e) {
       // ignore if canvas not supported
     }
+  }
+
+  // Copy to clipboard helper
+  const copyToClipboard = (text, key) => {
+    navigator.clipboard.writeText(text)
+    setCopiedKey(key)
+    setTimeout(() => setCopiedKey(null), 2000)
   }
 
   // AI Debate Opponent
@@ -103,6 +126,43 @@ function App() {
       alert(`AI opponent failed: ${error.message}`)
     } finally {
       setOpponentLoading(false)
+    }
+  }
+
+  // Generate Pro/Con Arguments
+  const generateArguments = async () => {
+    if (!topic.trim()) {
+      alert("Please enter a debate topic first")
+      return
+    }
+
+    setArgsLoading(true)
+    setArgsResult(null)
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/generate-arguments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          topic: topic,
+          category: topicCategory,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Failed to generate arguments")
+      }
+
+      setArgsResult(data)
+    } catch (error) {
+      console.error("ARGS ERROR:", error)
+      alert(`Arguments generation failed: ${error.message}`)
+    } finally {
+      setArgsLoading(false)
     }
   }
 
@@ -226,7 +286,7 @@ function App() {
         
         {/* Header with Floating Animated Badge */}
         <header className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-tr from-purple-600 to-blue-500 shadow-xl shadow-purple-500/20 mb-5 animate-float">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-tr from-purple-600 to-blue-500 shadow-xl shadow-purple-500/25 mb-5 animate-float">
             <span className="text-4xl">🎯</span>
           </div>
 
@@ -241,7 +301,7 @@ function App() {
         </header>
 
         {/* Developer Profile Section Card */}
-        <section className="group relative bg-gradient-to-r from-slate-900 via-purple-950/30 to-slate-900 border border-purple-800/40 hover:border-purple-500/60 rounded-2xl p-5 mb-8 transition-all duration-300 shadow-lg shadow-purple-950/20 hover:shadow-purple-900/30">
+        <section className="group relative bg-gradient-to-r from-slate-900 via-purple-950/30 to-slate-900 border border-purple-800/40 hover:border-purple-500/60 rounded-2xl p-5 mb-8 transition-all duration-300 shadow-lg shadow-purple-950/20 hover:shadow-purple-900/30 animate-glow-border">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="relative">
@@ -367,7 +427,7 @@ function App() {
             <select
               value={topicCategory}
               onChange={(e) => setTopicCategory(e.target.value)}
-              className="bg-slate-800 text-white border border-slate-700/80 hover:border-slate-600 rounded-xl px-4 py-3 outline-none focus:border-purple-500 transition-colors"
+              className="bg-slate-800 text-white border border-slate-700/80 hover:border-slate-600 rounded-xl px-4 py-3 outline-none focus:border-purple-500 transition-colors cursor-pointer"
             >
               <option value="General">General</option>
               <option value="Technology">Technology</option>
@@ -385,7 +445,7 @@ function App() {
               {topicLoading ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Generating...</span>
+                  <span>Generating Topics...</span>
                 </>
               ) : (
                 <>
@@ -426,6 +486,24 @@ function App() {
 
         {/* Input Card */}
         <section className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-2xl relative">
+          {/* Quick topic presets */}
+          <div className="mb-4">
+            <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2 block">
+              Quick Pick Topics:
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {QUICK_TOPICS.map((qTopic, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setTopic(qTopic)}
+                  className="text-xs px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-purple-900/40 text-slate-300 hover:text-purple-200 border border-slate-700/60 hover:border-purple-500/50 transition-all cursor-pointer hover:scale-102"
+                >
+                  {qTopic}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <label className="block text-sm font-semibold text-slate-300 mb-2 flex items-center justify-between">
             <span>Debate Topic</span>
             <span className="text-xs text-slate-500 font-normal">Choose from above or write your own</span>
@@ -454,10 +532,11 @@ function App() {
 
           {/* Action Buttons */}
           <div className="mt-6 flex flex-wrap gap-3.5">
+            {/* Analyze Button */}
             <button
               onClick={analyzeDebate}
-              disabled={loading || opponentLoading}
-              className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-sm transition-all duration-300 disabled:opacity-50 shadow-lg shadow-blue-600/20 hover:shadow-blue-600/40 active:scale-95 flex items-center gap-2.5 cursor-pointer"
+              disabled={loading || opponentLoading || argsLoading}
+              className="px-5 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-sm transition-all duration-300 disabled:opacity-50 shadow-lg shadow-blue-600/20 hover:shadow-blue-600/40 active:scale-95 flex items-center gap-2.5 cursor-pointer"
             >
               {loading ? (
                 <>
@@ -472,10 +551,11 @@ function App() {
               )}
             </button>
 
+            {/* Challenge Opponent Button */}
             <button
               onClick={debateOpponent}
-              disabled={opponentLoading || loading}
-              className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold text-sm transition-all duration-300 disabled:opacity-50 shadow-lg shadow-purple-600/20 hover:shadow-purple-600/40 active:scale-95 flex items-center gap-2.5 cursor-pointer"
+              disabled={opponentLoading || loading || argsLoading}
+              className="px-5 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold text-sm transition-all duration-300 disabled:opacity-50 shadow-lg shadow-purple-600/20 hover:shadow-purple-600/40 active:scale-95 flex items-center gap-2.5 cursor-pointer"
             >
               {opponentLoading ? (
                 <>
@@ -489,8 +569,54 @@ function App() {
                 </>
               )}
             </button>
+
+            {/* Pro/Con Generator Button */}
+            <button
+              onClick={generateArguments}
+              disabled={argsLoading || loading || opponentLoading}
+              className="px-5 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-sm transition-all duration-300 disabled:opacity-50 shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/40 active:scale-95 flex items-center gap-2.5 cursor-pointer"
+            >
+              {argsLoading ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>Generating Arguments...</span>
+                </>
+              ) : (
+                <>
+                  <Scale className="w-4 h-4" />
+                  <span>Generate Pro/Con Arguments</span>
+                </>
+              )}
+            </button>
           </div>
         </section>
+
+        {/* Animated Loading Shimmer State */}
+        {(loading || opponentLoading || argsLoading) && (
+          <section className="mt-8 bg-slate-900/90 border border-purple-800/40 rounded-2xl p-6 animate-pulse">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-purple-600/30 flex items-center justify-center">
+                <RefreshCw className="w-5 h-5 text-purple-400 animate-spin" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <span>AI Engine Thinking</span>
+                  <span className="flex gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: "0ms" }}></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: "150ms" }}></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: "300ms" }}></span>
+                  </span>
+                </h3>
+                <p className="text-xs text-purple-300">Processing argument with Llama 3.2...</p>
+              </div>
+            </div>
+            <div className="space-y-2.5">
+              <div className="h-3.5 bg-slate-800/80 rounded w-full animate-shimmer" />
+              <div className="h-3.5 bg-slate-800/80 rounded w-4/5 animate-shimmer" />
+              <div className="h-3.5 bg-slate-800/80 rounded w-3/5 animate-shimmer" />
+            </div>
+          </section>
+        )}
 
         {/* AI Analysis Result */}
         {result && (
@@ -524,13 +650,32 @@ function App() {
                   </div>
                 </div>
 
-                {skillScore && (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-950/60 border border-purple-700/60 text-purple-200">
-                    <Award className="w-5 h-5 text-yellow-400" />
-                    <span className="text-xs uppercase font-semibold">Overall:</span>
-                    <strong className="text-lg font-black text-white">{skillScore}/10</strong>
-                  </div>
-                )}
+                <div className="flex items-center gap-3">
+                  {skillScore && (
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-950/60 border border-purple-700/60 text-purple-200">
+                      <Award className="w-5 h-5 text-yellow-400" />
+                      <span className="text-xs uppercase font-semibold">Overall:</span>
+                      <strong className="text-lg font-black text-white">{skillScore}/10</strong>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={() => copyToClipboard(result.analysis, "analysis")}
+                    className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+                  >
+                    {copiedKey === "analysis" ? (
+                      <>
+                        <Check className="w-4 h-4 text-emerald-400" />
+                        <span className="text-emerald-400 font-semibold">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
 
               {/* Score Progress Meters */}
@@ -591,19 +736,80 @@ function App() {
           </section>
         )}
 
+        {/* AI Pro/Con Arguments Result */}
+        {argsResult && (
+          <section className="mt-8 bg-slate-900/95 border border-emerald-900/70 rounded-2xl p-6 shadow-2xl animate-fade-in">
+            <div className="flex items-center justify-between gap-3 mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl bg-emerald-600/20 border border-emerald-500/40 flex items-center justify-center text-xl shrink-0">
+                  ⚖️
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <span>Structured Pro & Con Arguments</span>
+                  </h2>
+                  <p className="text-xs text-emerald-300">Topic: {argsResult.topic}</p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => copyToClipboard(argsResult.ai_response, "args")}
+                className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+              >
+                {copiedKey === "args" ? (
+                  <>
+                    <Check className="w-4 h-4 text-emerald-400" />
+                    <span className="text-emerald-400 font-semibold">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="bg-slate-800/70 border border-slate-700/60 rounded-xl p-5">
+              <p className="whitespace-pre-wrap text-slate-200 leading-relaxed text-sm sm:text-base">
+                {argsResult.ai_response}
+              </p>
+            </div>
+          </section>
+        )}
+
         {/* AI Debate Opponent Result */}
         {opponentResult && (
           <section className="mt-8 bg-slate-900/95 border border-purple-900/70 rounded-2xl p-6 shadow-2xl animate-fade-in">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-11 h-11 rounded-xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-xl shrink-0">
-                ⚔️
+            <div className="flex items-center justify-between gap-3 mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-xl shrink-0">
+                  ⚔️
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <span>AI Opponent Counter-Strike</span>
+                  </h2>
+                  <p className="text-xs text-purple-300">Respectful Counter-Argument & Challenge</p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <span>AI Opponent Counter-Strike</span>
-                </h2>
-                <p className="text-xs text-purple-300">Respectful Counter-Argument & Challenge</p>
-              </div>
+
+              <button
+                onClick={() => copyToClipboard(opponentResult.opponent_response, "opponent")}
+                className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+              >
+                {copiedKey === "opponent" ? (
+                  <>
+                    <Check className="w-4 h-4 text-emerald-400" />
+                    <span className="text-emerald-400 font-semibold">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
             </div>
 
             <div className="bg-slate-800/70 border border-slate-700/60 rounded-xl p-5">
