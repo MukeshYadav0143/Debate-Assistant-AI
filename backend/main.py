@@ -4,7 +4,8 @@ from pydantic import BaseModel
 import requests
 from pymongo import MongoClient
 
-client = MongoClient("mongodb://localhost:27017/")
+import os
+client = MongoClient(os.getenv("MONGO_URI", "mongodb://localhost:27017/"))
 db = client["debate_assistant"]
 debates_collection = db["debates"]
 
@@ -21,6 +22,7 @@ app.add_middleware(
 
 class DebateRequest(BaseModel):
     topic: str
+    category: str = "General"
 
 
 @app.get("/")
